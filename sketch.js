@@ -1,5 +1,13 @@
-var symbolSize;// = 42;
-var motJouer = 'play';//jouer';
+/* 
+Guest Tutorial #4: Matrix Digital Rain in p5.js with Emily Xie
+https://www.youtube.com/watch?v=S1TQCi9axzg
+In this guest tutorial, Emily Xie uses the p5.js library to recreate the digital rain effect from the movie The Matrix. 
+
+Only a few lines modified to get the code below
+*/
+
+var symbolSize;
+var motJouer = 'play';//'jouer';
 var motRaisonner = 'think';//'raisonner';
 var motCreer = 'create';//'creer';
 var streams = [];
@@ -19,35 +27,34 @@ function setup() {
   	noStroke();
  	var y = 0;
  	for (var i = 0; i <= height / symbolSize; i++) {
- 	  var r = random (0, 1.0);
- 	  var word = RAISONNER;
-    if (r > 0.6) {
-      word = CREER;
-    }
-    else if (r > 0.3) {
-      word = JOUER;
-    }
+        var r = random (0, 1.0);
+        var word = RAISONNER;
+        if (r > 0.6) {
+            word = CREER;
+        }
+        else if (r > 0.3) {
+            word = JOUER;
+        }
  		stream = new Stream(word);
  		stream.generateSymbols(random(-1000, 0), y);
  		streams.push(stream);
  		y += symbolSize;
  	}
  	stream.generateSymbols();
-  textSize(symbolSize);
+    textSize(symbolSize);
   
-  for (var i = 0; i <= 30; i++) {//50 taille 50 alpha 100: sympa
+    for (var i = 0; i <= 30; i++) {
  	  creature = new Creature(random(0,width), 
  	                          random(0,height), 
- 	                          height/4, //200, //size
+ 	                          height/4, 
  	                          0, 255, 255 , random(20)); 
  	  creatures.push(creature);
  	}
 }
 
 function draw(){
-  //background(70 + frameCount/10 % 50, frameCount/10 % 25, frameCount/10 % 25);
 	background(90, 15, 15);
- 	  streams.forEach(function(stream) {
+    streams.forEach(function(stream) {
 		stream.render();
 		if (stream.jouer) {
 		  nbJouer++;
@@ -57,13 +64,7 @@ function draw(){
  	creatures.forEach(function(creature) {
 		creature.render();
 });
-    
-        
-//    if (frameCount <= 4) {
-//        saveCanvas("../output/matrix-" + frameCount + ".jpg"); 
-//    }
-//    saveFrames("out", "png", 1, 30);
-	}
+}
 
 function Symbol(x, y, speed, position) {
 	this.x = x;
@@ -76,7 +77,7 @@ function Symbol(x, y, speed, position) {
 
 	this.setToRandomSymbol = function () {
 		if (frameCount % this.switchInterval == 0 && !this.stop) {
-			this.value = String.fromCharCode(48 + round(random(0, 74)));//97 + round(random(0, 25)));
+			this.value = String.fromCharCode(48 + round(random(0, 74)));
 		}
 	}
 
@@ -92,9 +93,10 @@ function Symbol(x, y, speed, position) {
 	}
 }
 
+// each stream will look after one of the 3 words (play/create/think) given as a parameter
 function Stream (word) {
 	this.symbols = [];
-	this.totalSymbols = round(random(8, 25));//30));
+	this.totalSymbols = round(random(8, 25));
 	this.speed = random (1, 3);
 	this.word = word;
 
@@ -107,11 +109,12 @@ function Stream (word) {
 		}
 	}
 	this.render = function () {
-		this.symbols.forEach(function(symbol) {
-    if ( word == JOUER && 
-          symbol.position < motJouer.length && 
-			    (symbol.value == motJouer.charAt(symbol.position) || symbol.value == motJouer.toUpperCase().charAt(symbol.position)) && 
-			     symbol.x >= 0) {
+        this.symbols.forEach(function(symbol) {
+        
+        // is there any matching between the generated symbols and the words to display ?
+        if ( word == JOUER && 
+            symbol.position < motJouer.length && 
+			 (symbol.value == motJouer.charAt(symbol.position) || symbol.value == motJouer.toUpperCase().charAt(symbol.position)) && symbol.x >= 0) {
 			   symbol.value = motJouer.toUpperCase().charAt(symbol.position);
 			   symbol.stop = true;
 			   fill (253, 240, 255);//white
@@ -144,10 +147,9 @@ function Stream (word) {
 			symbol.setToRandomSymbol();
 		});
 	}
-
-
 }
 
+// transparent circles in the background
 function Creature (paramX, paramY,paramSize, paramRed, paramGreen, paramBlue, paramAngle) {
   this.x = paramX;
   this.y = paramY;
@@ -159,10 +161,11 @@ function Creature (paramX, paramY,paramSize, paramRed, paramGreen, paramBlue, pa
   this.scalar=initScalar;
   
   this.render = function() {
-    fill (this.bRed,this.bBlue,this.bGreen, 40);//20);//100);
+    fill (this.bRed,this.bBlue,this.bGreen, 40);
     this.y += this.scalar*sin(this.angle);
     this.x += this.scalar*cos(this.angle);
-    ellipse (this.x, this.y, 2*this.size, 2*this.size);fill(0);
+    ellipse (this.x, this.y, 2*this.size, 2*this.size);
+    fill(0);
     this.angle += speedCreature;
   }
 }
